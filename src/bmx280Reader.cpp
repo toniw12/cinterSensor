@@ -50,9 +50,17 @@ void BMx280Reader::begin(){
         bmx280.writeOversamplingHumidity(BMx280MI::OSRS_H_x16);
 
     bmx280.measure();
+    initOK=1;
 }
 
 void BMx280Reader::measure(){
+    if(initOK==0){
+        registers[BMx280_TEMPERATURE]=0x7FFF;
+        registers[BMx280_PRESSURE_MSB]=0x7FFF;
+        registers[BMx280_PRESSURE_LSB]=0xFFFF;
+        registers[BMx280_HUMIDITY]=0x7FFF;
+        return;
+    }
     if (bmx280.hasValue()){
         temperature=bmx280.getTemperature();
         if (temperature==NAN){

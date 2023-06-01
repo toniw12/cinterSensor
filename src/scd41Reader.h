@@ -31,6 +31,7 @@ private:
     void printUint16Hex(uint16_t value);
     TwoWire *_wire;
     SensirionI2CScd4x scd4x;
+    int initOK=0;
 };
 
 #endif /* SCD41READER_H_ */

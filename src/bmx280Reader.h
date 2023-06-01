@@ -27,10 +27,13 @@ public:
     void measure();
 
     uint16_t registers[4];
+    uint16_t registersRAW[4];
     float pressure,temperature,humidity;
 protected:
+
     TwoWire wire_;
     BMx280TwoWire bmx280;
+    int initOK=0;
 };
 
 #endif /* BMX280READER_H_ */

@@ -36,23 +36,32 @@ void SCD41Reader::begin(){
     scd4x.begin(*_wire);
     error = scd4x.getSerialNumber(serial0, serial1, serial2);
     if (error) {
-        Serial.print("Error trying to execute getSerialNumber(): ");
+        /*Serial.print("Error trying to execute getSerialNumber(): ");
         errorToString(error, errorMessage, 256);
         Serial.println(errorMessage);
+        */
+        return;
     } else {
+        /*
         Serial.print("Serial: 0x");
         printUint16Hex(serial0);
         printUint16Hex(serial1);
         printUint16Hex(serial2);
         Serial.println();
+        */
     }
 
     // Start Measurement
     error = scd4x.startPeriodicMeasurement();
     if (error) {
+        /*
         Serial.print("Error trying to execute startPeriodicMeasurement(): ");
         errorToString(error, errorMessage, 256);
         Serial.println(errorMessage);
+        */
+    }
+    else{
+        initOK=1;
     }
 }
 
@@ -61,15 +70,24 @@ void SCD41Reader::measure(){
     uint16_t co2;
     float temperature;
     float humidity;
-    uint16_t error = scd4x.readMeasurement(co2, temperature, humidity);
+
+    uint16_t error;
+
+    if(initOK){
+        error = scd4x.readMeasurement(co2, temperature, humidity);
+    }
+    else{
+        error=1;
+    }
+
     if (error) {
         if (error!=526) { // wait until data comes
             registers[SCD41_TEMPERATURE]=0x7FFF;
             registers[SCD41_HUMIDITY]=0x7FFF;
             registers[SCD41_CO2]=0x7FFF;
 
-            errorToString(error, errorMessage, 256);
-            Serial.println(errorMessage);
+            //errorToString(error, errorMessage, 256);
+            //Serial.println(errorMessage);
         }
     }
     else{
